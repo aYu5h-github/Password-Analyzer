@@ -7,8 +7,6 @@
 
 > A sophisticated, hacker-style password strength analyzer with dark web simulation, breach database checking, and real-time security auditing.
 
-![Password Auditor Demo](https://via.placeholder.com/800x400?text=Password+Auditor+Demo+Image)
-
 ## 🎯 Features
 
 ### Core Security Analysis
@@ -47,5 +45,5 @@
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/password-auditor.git
+git clone https://github.com/aYu5h-github/password-auditor.git
 cd password-auditor
