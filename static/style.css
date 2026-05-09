@@ -1,0 +1,422 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Share Tech Mono', monospace;
+    background: #000000;
+    color: #00ff00;
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* CRT Screen Effect */
+.crt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 0, 0.03) 0px,
+        rgba(0, 255, 0, 0.03) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Scan Line Animation */
+.scan-line {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0, 255, 0, 0.1) 50%,
+        transparent 100%
+    );
+    animation: scan 8s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes scan {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #0a0a0a;
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    position: relative;
+    z-index: 2;
+    animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+    0% { opacity: 0.98; }
+    5% { opacity: 1; }
+    10% { opacity: 0.98; }
+    15% { opacity: 1; }
+    100% { opacity: 1; }
+}
+
+.header {
+    background: #000000;
+    padding: 30px;
+    text-align: center;
+    border-bottom: 1px solid #00ff00;
+}
+
+.glitch {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: relative;
+    text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75);
+    animation: glitch 0.3s infinite;
+}
+
+@keyframes glitch {
+    0% {
+        text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75);
+    }
+    14% {
+        text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75);
+    }
+    15% {
+        text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.05em 0 rgba(0,255,0,0.75);
+    }
+    49% {
+        text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.05em 0 rgba(0,255,0,0.75);
+    }
+    50% {
+        text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75);
+    }
+    99% {
+        text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75);
+    }
+    100% {
+        text-shadow: -0.025em 0 0 rgba(255,0,0,0.75), -0.025em -0.025em 0 rgba(0,255,0,0.75);
+    }
+}
+
+.subtitle {
+    font-size: 12px;
+    margin-top: 10px;
+    color: #00cc00;
+}
+
+.warning {
+    font-size: 10px;
+    margin-top: 10px;
+    color: #ff0000;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.input-section {
+    padding: 30px;
+    background: #050505;
+}
+
+.prompt {
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.prompt-sign {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+.prompt-text {
+    color: #ffffff;
+}
+
+.password-input-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+#passwordInput {
+    width: 100%;
+    padding: 12px 50px 12px 15px;
+    font-size: 16px;
+    font-family: 'Share Tech Mono', monospace;
+    background: #000000;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    border-radius: 0px;
+}
+
+#passwordInput:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.toggle-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #000000;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+    padding: 5px;
+}
+
+.analyze-btn {
+    width: 100%;
+    padding: 12px;
+    background: #000000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+}
+
+.analyze-btn:hover {
+    background: #00ff00;
+    color: #000000;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+.hint {
+    margin-top: 10px;
+    font-size: 11px;
+    color: #666600;
+    text-align: center;
+}
+
+.results-section {
+    padding: 30px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.terminal-window {
+    border: 1px solid #00ff00;
+    background: #000000;
+}
+
+.terminal-header {
+    background: #001100;
+    padding: 10px;
+    border-bottom: 1px solid #00ff00;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.terminal-content {
+    padding: 20px;
+}
+
+.strength-card {
+    background: #001100;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #00ff00;
+}
+
+.strength-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.strength-label {
+    font-weight: bold;
+}
+
+.strength-value {
+    font-weight: bold;
+}
+
+.strength-bar {
+    height: 20px;
+    background: #000000;
+    border: 1px solid #00ff00;
+    overflow: hidden;
+}
+
+.strength-progress {
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.metric-card {
+    background: #001100;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #00ff00;
+}
+
+.metric-icon {
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.metric-value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.metric-unit {
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.analysis-details {
+    background: #001100;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #00ff00;
+}
+
+.section-header {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: #00ff00;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 5px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #003300;
+    font-size: 12px;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-icon {
+    width: 50px;
+}
+
+.detail-text {
+    flex: 1;
+}
+
+.detail-status {
+    font-weight: bold;
+}
+
+.detail-status.good {
+    color: #00ff00;
+}
+
+.detail-status.warning {
+    color: #ffff00;
+}
+
+.detail-status.bad {
+    color: #ff6600;
+}
+
+.detail-status.critical {
+    color: #ff0000;
+}
+
+.suggestions-section {
+    background: #000000;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ffff00;
+}
+
+.suggestions-section ul, .security-tips ul {
+    margin-left: 20px;
+    list-style: none;
+}
+
+.suggestions-section li, .security-tips li {
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+.security-tips {
+    background: #000000;
+    padding: 15px;
+    border: 1px solid #00ccff;
+}
+
+.footer {
+    background: #000000;
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid #00ff00;
+    font-size: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.blinking-cursor {
+    animation: blink 1s step-end infinite;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .glitch {
+        font-size: 20px;
+    }
+}

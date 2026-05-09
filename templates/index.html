@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>┌∩┐ PASSWORD BREACH ANALYZER └∩┘</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="crt-overlay"></div>
+    <div class="scan-line"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="glitch" data-text=">_ PASSWORD_SECURITY_MATRIX">>_ PASSWORD_SECURITY_MATRIX</div>
+            <div class="subtitle">[ Advanced Cryptographic Analysis Terminal v2.0 ]</div>
+            <div class="warning">⚠️ CLASSIFIED SYSTEM ⚠️</div>
+        </div>
+
+        <div class="input-section">
+            <div class="prompt">
+                <span class="prompt-sign">$</span>
+                <span class="prompt-text"> Enter target password for analysis:</span>
+            </div>
+            <div class="password-input-wrapper">
+                <input type="password" id="passwordInput" placeholder="[INPUT PASSWORD]" autocomplete="off">
+                <button id="toggleVisibility" class="toggle-btn">[👁]</button>
+            </div>
+            <button id="analyzeBtn" class="analyze-btn">> EXECUTE_SCAN.exe</button>
+            <div class="hint">[*] Press [ENTER] to initiate breach analysis</div>
+        </div>
+
+        <div id="results" class="results-section" style="display: none;">
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <span class="terminal-title">[SECURITY_AUDIT_TERMINAL]</span>
+                    <span class="terminal-controls">[─] [□] [X]</span>
+                </div>
+                <div class="terminal-content">
+                    <div class="strength-card" id="strengthCard">
+                        <div class="strength-header">
+                            <span class="strength-label">[STATUS]</span>
+                            <span class="strength-value" id="strengthValue">-</span>
+                        </div>
+                        <div class="strength-bar">
+                            <div class="strength-progress" id="strengthProgress"></div>
+                        </div>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">[ENTROPY]</div>
+                            <div class="metric-value" id="entropyValue">-</div>
+                            <div class="metric-unit">bits</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">[CRACK_TIME]</div>
+                            <div class="metric-value" id="crackTimeValue">-</div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-details">
+                        <div class="section-header">>_ DECRYPTION_LOG ___________________________________________</div>
+                        <div class="detail-item" id="lengthDetail">
+                            <span class="detail-icon">[LEN]</span>
+                            <span class="detail-text" id="lengthText">-</span>
+                            <span class="detail-status" id="lengthStatus"></span>
+                        </div>
+                        <div class="detail-item" id="varietyDetail">
+                            <span class="detail-icon">[CHR]</span>
+                            <span class="detail-text" id="varietyText">-</span>
+                            <span class="detail-status" id="varietyStatus"></span>
+                        </div>
+                        <div class="detail-item" id="patternsDetail">
+                            <span class="detail-icon">[PAT]</span>
+                            <span class="detail-text" id="patternsText">-</span>
+                            <span class="detail-status" id="patternsStatus"></span>
+                        </div>
+                        <div class="detail-item" id="commonDetail">
+                            <span class="detail-icon">[DB]</span>
+                            <span class="detail-text" id="commonText">-</span>
+                            <span class="detail-status" id="commonStatus"></span>
+                        </div>
+                    </div>
+
+                    <div class="suggestions-section">
+                        <div class="section-header">>_ BREACH_PREVENTION_PROTOCOLS ________________________________</div>
+                        <ul id="suggestionsList"></ul>
+                    </div>
+
+                    <div class="security-tips">
+                        <div class="section-header">>_ SECURITY_DIRECTIVES _________________________________________</div>
+                        <ul>
+                            <li>[!] NEVER reuse passwords across multiple systems</li>
+                            <li>[!] Activate 2FA on all critical access points</li>
+                            <li>[!] Deploy password manager for key generation</li>
+                            <li>[!] Rotate credentials every 90 days minimum</li>
+                            <li>[!] Avoid personally identifiable information (PII)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-text">[SYSTEM_STATUS: ONLINE] | [ENCRYPTION: ACTIVE] | [LOG: SECURE]</div>
+            <div class="blinking-cursor">>_</div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
