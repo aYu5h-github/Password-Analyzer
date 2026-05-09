@@ -4,12 +4,14 @@ import string
 
 class PasswordStrengthAnalyzer:
     def __init__(self):
-        # Common weak passwords
+        # Expanded common passwords
         self.common_passwords = {
             'password', '123456', '123456789', 'qwerty', 'abc123', 
             'password123', 'admin', 'letmein', 'welcome', 'monkey',
             'dragon', 'master', 'hello', 'football', 'superman',
-            'admin123', 'root', 'toor', 'passw0rd'
+            'admin123', 'root', 'toor', 'passw0rd', 'shadow', 'bitcoin',
+            '12345678', '111111', '123123', '12345', '1234567890',
+            'qwerty123', '1q2w3e4r', 'iloveyou', 'princess', 'sunshine'
         }
         
         self.char_sets = {
@@ -17,17 +19,6 @@ class PasswordStrengthAnalyzer:
             'uppercase': string.ascii_uppercase,
             'digits': string.digits,
             'special': string.punctuation
-        }
-        
-        # Hacker-style messages
-        self.hacker_messages = {
-            'cracking': [
-                "[*] Initiating security scan...",
-                "[>] Bypassing firewall...",
-                "[+] Accessing authentication matrix...",
-                "[*] Running entropy algorithms...",
-                "[>] Analyzing cryptographic strength..."
-            ]
         }
     
     def calculate_entropy(self, password):
@@ -84,7 +75,7 @@ class PasswordStrengthAnalyzer:
             score -= 1
             warnings.append("Detected repeated characters")
         
-        sequences = ['abcdefghijklmnopqrstuvwxyz', '0123456789', 'qwertyuiop', 'asdfghjkl']
+        sequences = ['abcdefghijklmnopqrstuvwxyz', '0123456789', 'qwertyuiop', 'asdfghjkl', 'zxcvbnm']
         lower_pass = password.lower()
         
         for seq in sequences:
@@ -96,7 +87,7 @@ class PasswordStrengthAnalyzer:
             if score < 2:
                 break
         
-        keyboard_patterns = ['qwerty', 'asdfgh', 'zxcvbn', '1qaz', '2wsx']
+        keyboard_patterns = ['qwerty', 'asdfgh', 'zxcvbn', '1qaz', '2wsx', 'qwertyuiop']
         for pattern in keyboard_patterns:
             if pattern in password.lower():
                 score -= 1
@@ -147,16 +138,17 @@ class PasswordStrengthAnalyzer:
         max_possible_score = 12
         percentage = (total_score / max_possible_score) * 100 if max_possible_score > 0 else 0
         
+        # Return level for theme switching
         if entropy < 30 and total_score < 6:
-            return "⚠️ CRITICAL", "#ff0000"
+            return "⚠️ CRITICAL", "#ff0000", "critical"
         elif entropy < 40 and total_score < 9:
-            return "⚠️ WEAK", "#ff6600"
+            return "⚠️ WEAK", "#ff6600", "weak"
         elif entropy < 60 and total_score < 12:
-            return "🟡 MODERATE", "#ffff00"
+            return "🟡 MODERATE", "#ffff00", "moderate"
         elif entropy < 80 or total_score < 14:
-            return "🟢 SECURE", "#00ff00"
+            return "🟢 SECURE", "#00ff00", "secure"
         else:
-            return "💪 IMPENETRABLE", "#00ffff"
+            return "💪 IMPENETRABLE", "#00ffff", "impenetrable"
     
     def generate_improvement_suggestions(self, password, results):
         suggestions = []
@@ -214,10 +206,11 @@ class PasswordStrengthAnalyzer:
         }
         
         total_score = sum([length_score, variety_score, patterns_score, common_score])
-        strength_rating, strength_color = self.get_strength_rating(entropy, total_score)
+        strength_rating, strength_color, strength_level = self.get_strength_rating(entropy, total_score)
         
         results['strength_rating'] = strength_rating
         results['strength_color'] = strength_color
+        results['strength_level'] = strength_level
         results['total_score'] = total_score
         results['suggestions'] = self.generate_improvement_suggestions(password, results)
         

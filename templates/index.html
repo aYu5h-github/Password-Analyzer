@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>┌∩┐ PASSWORD BREACH ANALYZER └∩┘</title>
+    <title>┌∩┐ PASSWORD BREACH ANALYZER v3.0 └∩┘</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body class="theme-amber">
     <div class="crt-overlay"></div>
     <div class="scan-line"></div>
     
     <div class="container">
         <div class="header">
-            <div class="glitch" data-text=">_ PASSWORD_SECURITY_MATRIX">>_ PASSWORD_SECURITY_MATRIX</div>
-            <div class="subtitle">[ Advanced Cryptographic Analysis Terminal v2.0 ]</div>
-            <div class="warning">⚠️ CLASSIFIED SYSTEM ⚠️</div>
+            <div class="glitch" data-text=">_ DARK_WEB_PASSWORD_AUDITOR">>_ DARK_WEB_PASSWORD_AUDITOR</div>
+            <div class="subtitle">[ Advanced Cryptographic Analysis Terminal v3.0 ]</div>
+            <div class="warning" id="darkWebWarning">⚠️ CONNECTING TO DARK_WEB_NODES ⚠️</div>
         </div>
 
         <div class="input-section">
@@ -26,15 +26,22 @@
                 <input type="password" id="passwordInput" placeholder="[INPUT PASSWORD]" autocomplete="off">
                 <button id="toggleVisibility" class="toggle-btn">[👁]</button>
             </div>
-            <button id="analyzeBtn" class="analyze-btn">> EXECUTE_SCAN.exe</button>
-            <div class="hint">[*] Press [ENTER] to initiate breach analysis</div>
+            <div class="button-group">
+                <button id="analyzeBtn" class="analyze-btn">> EXECUTE_SCAN.exe</button>
+                <button id="generateBtn" class="generate-btn">[+] GENERATE_STRONG_PASSWORD</button>
+            </div>
+            <div class="hint">[*] Press [ENTER] to initiate breach analysis | [DARK WEB SIMULATION ACTIVE]</div>
         </div>
 
         <div id="results" class="results-section" style="display: none;">
             <div class="terminal-window">
                 <div class="terminal-header">
                     <span class="terminal-title">[SECURITY_AUDIT_TERMINAL]</span>
-                    <span class="terminal-controls">[─] [□] [X]</span>
+                    <div class="terminal-controls">
+                        <button id="exportBtn" class="control-btn">[📄 EXPORT]</button>
+                        <button id="historyBtn" class="control-btn">[📜 HISTORY]</button>
+                        <span class="terminal-close">[X]</span>
+                    </div>
                 </div>
                 <div class="terminal-content">
                     <div class="strength-card" id="strengthCard">
@@ -56,6 +63,14 @@
                         <div class="metric-card">
                             <div class="metric-icon">[CRACK_TIME]</div>
                             <div class="metric-value" id="crackTimeValue">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Dark Web Simulation -->
+                    <div class="dark-web-section" id="darkWebSection" style="display: none;">
+                        <div class="section-header">>_ DARK_WEB_SCAN ______________________________________________</div>
+                        <div class="dark-web-content">
+                            <div id="darkWebLog" class="dark-web-log"></div>
                         </div>
                     </div>
 
@@ -81,6 +96,11 @@
                             <span class="detail-text" id="commonText">-</span>
                             <span class="detail-status" id="commonStatus"></span>
                         </div>
+                        <div class="detail-item" id="breachDetail">
+                            <span class="detail-icon">[🌐]</span>
+                            <span class="detail-text" id="breachText">Breach Database Check: -</span>
+                            <span class="detail-status" id="breachStatus"></span>
+                        </div>
                     </div>
 
                     <div class="suggestions-section">
@@ -102,8 +122,24 @@
             </div>
         </div>
 
+        <!-- History Modal -->
+        <div id="historyModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">[ PASSWORD_HISTORY_LOG ]</span>
+                    <span class="modal-close">&times;</span>
+                </div>
+                <div class="modal-body" id="historyList">
+                    <div class="history-empty">No passwords analyzed yet</div>
+                </div>
+                <div class="modal-footer">
+                    <button id="clearHistoryBtn" class="danger-btn">[CLEAR HISTORY]</button>
+                </div>
+            </div>
+        </div>
+
         <div class="footer">
-            <div class="footer-text">[SYSTEM_STATUS: ONLINE] | [ENCRYPTION: ACTIVE] | [LOG: SECURE]</div>
+            <div class="footer-text">[SYSTEM_STATUS: ONLINE] | [DARK_WEB: CONNECTED] | [ENCRYPTION: ACTIVE]</div>
             <div class="blinking-cursor">>_</div>
         </div>
     </div>

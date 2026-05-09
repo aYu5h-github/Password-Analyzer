@@ -1,16 +1,208 @@
 let isPasswordVisible = false;
 let analysisInProgress = false;
+let passwordHistory = loadHistory();
+
+// Load history from localStorage
+function loadHistory() {
+    const saved = localStorage.getItem('passwordHistory');
+    if (saved) {
+        return JSON.parse(saved);
+    }
+    return [];
+}
+
+// Save history to localStorage
+function saveHistory() {
+    localStorage.setItem('passwordHistory', JSON.stringify(passwordHistory));
+}
+
+// Add to history
+function addToHistory(password, results) {
+    const historyEntry = {
+        id: Date.now(),
+        password: '*'.repeat(password.length), // Store only masked version
+        strength: results.strength_rating,
+        entropy: results.entropy,
+        timestamp: new Date().toISOString(),
+        date: new Date().toLocaleString()
+    };
+    passwordHistory.unshift(historyEntry); // Add to beginning
+    if (passwordHistory.length > 20) passwordHistory.pop(); // Keep last 20
+    saveHistory();
+}
+
+// Generate strong password
+function generateStrongPassword() {
+    const length = 16;
+    const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lowercase = "abcdefghijklmnopqrstuvwxyz";
+    const numbers = "0123456789";
+    const symbols = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+    
+    let password = "";
+    password += uppercase[Math.floor(Math.random() * uppercase.length)];
+    password += lowercase[Math.floor(Math.random() * lowercase.length)];
+    password += numbers[Math.floor(Math.random() * numbers.length)];
+    password += symbols[Math.floor(Math.random() * symbols.length)];
+    
+    const allChars = uppercase + lowercase + numbers + symbols;
+    for (let i = password.length; i < length; i++) {
+        password += allChars[Math.floor(Math.random() * allChars.length)];
+    }
+    
+    // Shuffle the password
+    password = password.split('').sort(() => Math.random() - 0.5).join('');
+    
+    document.getElementById('passwordInput').value = password;
+    document.getElementById('analyzeBtn').click();
+}
 
 // Toggle password visibility
-document.getElementById('toggleVisibility').addEventListener('click', function() {
+document.getElementById('toggleVisibility')?.addEventListener('click', function() {
     const passwordInput = document.getElementById('passwordInput');
     isPasswordVisible = !isPasswordVisible;
     passwordInput.type = isPasswordVisible ? 'text' : 'password';
     this.textContent = isPasswordVisible ? '[🙈]' : '[👁]';
 });
 
-// Analyze button click handler (removed auto-analyze)
-document.getElementById('analyzeBtn').addEventListener('click', async function() {
+// Generate password button
+document.getElementById('generateBtn')?.addEventListener('click', generateStrongPassword);
+
+// Export report button
+document.getElementById('exportBtn')?.addEventListener('click', async function() {
+    if (!currentResults) {
+        alert('[!] No analysis to export');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/export-report', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ report: currentResults })
+        });
+        
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `password_audit_${Date.now()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        showConsoleMessage('[+] Report exported successfully');
+    } catch (error) {
+        console.error('Export failed:', error);
+        alert('[!] Export failed');
+    }
+});
+
+// History button
+document.getElementById('historyBtn')?.addEventListener('click', function() {
+    displayHistory();
+    document.getElementById('historyModal').style.display = 'block';
+});
+
+// Close modal
+document.querySelector('.modal-close')?.addEventListener('click', function() {
+    document.getElementById('historyModal').style.display = 'none';
+});
+
+document.getElementById('clearHistoryBtn')?.addEventListener('click', function() {
+    passwordHistory = [];
+    saveHistory();
+    displayHistory();
+});
+
+// Click outside modal to close
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('historyModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+function displayHistory() {
+    const historyList = document.getElementById('historyList');
+    if (passwordHistory.length === 0) {
+        historyList.innerHTML = '<div class="history-empty">No passwords analyzed yet</div>';
+        return;
+    }
+    
+    historyList.innerHTML = passwordHistory.map(entry => `
+        <div class="history-item">
+            <div><strong>${entry.strength}</strong> | Entropy: ${entry.entropy} bits</div>
+            <div class="date">${entry.date}</div>
+            <div class="password-mask">${entry.password}</div>
+        </div>
+    `).join('');
+}
+
+// Dark Web Simulation
+async function simulateDarkWeb() {
+    const darkWebSection = document.getElementById('darkWebSection');
+    const darkWebLog = document.getElementById('darkWebLog');
+    
+    darkWebSection.style.display = 'block';
+    darkWebLog.innerHTML = '';
+    
+    const messages = [
+        '[>] Connecting to TOR nodes...',
+        '[+] Connected to 3 anonymous proxies',
+        '[>] Accessing dark web breach databases...',
+        '[!] Found 127 potential password dumps',
+        '[>] Scanning for password hash...',
+        '[+] Hash found in 3 databases',
+        '[⚠️] Password appears in RockYou (2009) breach',
+        '[⚠️] Password appears in LinkedIn (2012) breach',
+        '[>] Checking HaveIBeenPwned API...',
+        '[+] 2 additional breaches found',
+        '[!] This password has been compromised!',
+        '[>] Generating security recommendations...'
+    ];
+    
+    for (let msg of messages) {
+        await sleep(150);
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+        logEntry.textContent = msg;
+        darkWebLog.appendChild(logEntry);
+        darkWebLog.scrollTop = darkWebLog.scrollHeight;
+    }
+}
+
+// Update theme based on password strength
+function updateTheme(strengthLevel) {
+    const body = document.body;
+    body.classList.remove('theme-amber', 'theme-green', 'theme-red');
+    
+    switch(strengthLevel) {
+        case 'critical':
+            body.classList.add('theme-red');
+            break;
+        case 'weak':
+            body.classList.add('theme-red');
+            break;
+        case 'moderate':
+            body.classList.add('theme-amber');
+            break;
+        case 'secure':
+            body.classList.add('theme-green');
+            break;
+        case 'impenetrable':
+            body.classList.add('theme-green');
+            break;
+        default:
+            body.classList.add('theme-amber');
+    }
+}
+
+// Analyze button
+document.getElementById('analyzeBtn')?.addEventListener('click', async function() {
     const password = document.getElementById('passwordInput').value;
     
     if (!password) {
@@ -26,29 +218,25 @@ document.getElementById('analyzeBtn').addEventListener('click', async function()
     await analyzePassword(password);
 });
 
-// Enter key support (only when button exists)
-document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+// Enter key support
+document.getElementById('passwordInput')?.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         e.preventDefault();
         document.getElementById('analyzeBtn').click();
     }
 });
 
+let currentResults = null;
+
 async function analyzePassword(password) {
     analysisInProgress = true;
     const analyzeBtn = document.getElementById('analyzeBtn');
     const originalText = analyzeBtn.textContent;
     
-    // Show hacking simulation messages
     showConsoleMessage('[>] INITIATING SECURITY_PROTOCOL...');
     await sleep(200);
-    showConsoleMessage('[>] BYPASSING ENCRYPTION LAYERS...');
-    await sleep(200);
-    showConsoleMessage('[>] ACCESSING PASSWORD_MATRIX...');
-    await sleep(200);
-    showConsoleMessage('[>] CALCULATING ENTROPY VALUES...');
     
-    analyzeBtn.textContent = '[> SCANNING...]';
+    analyzeBtn.textContent = '[> SCANNING DARK WEB...]';
     analyzeBtn.disabled = true;
     
     try {
@@ -63,8 +251,34 @@ async function analyzePassword(password) {
         const data = await response.json();
         
         if (data.success) {
-            showConsoleMessage('[+] ANALYSIS_COMPLETE. RESULTS:');
+            currentResults = {
+                timestamp: data.timestamp,
+                strength_rating: data.strength_rating,
+                entropy: data.entropy,
+                crack_time: data.crack_time,
+                total_score: data.total_score,
+                length_message: data.length_message,
+                variety_message: data.variety_message,
+                patterns_message: data.patterns_message,
+                common_message: data.common_message,
+                suggestions: data.suggestions,
+                breach_count: data.breach_check.count,
+                breaches: data.breach_check.breaches
+            };
+            
+            // Update theme based on strength
+            updateTheme(data.strength_level);
+            
+            // Show dark web simulation for weak passwords
+            if (data.strength_level === 'critical' || data.strength_level === 'weak') {
+                await simulateDarkWeb();
+            } else {
+                document.getElementById('darkWebSection').style.display = 'none';
+            }
+            
             displayResults(data);
+            addToHistory(password, data);
+            showConsoleMessage('[+] ANALYSIS_COMPLETE');
         } else {
             showConsoleMessage('[!] ERROR: ' + data.error, true);
         }
@@ -80,7 +294,6 @@ async function analyzePassword(password) {
 
 function showConsoleMessage(message, isError = false) {
     console.log(message);
-    // You can add a console output div if you want
 }
 
 function sleep(ms) {
@@ -88,11 +301,9 @@ function sleep(ms) {
 }
 
 function displayResults(data) {
-    // Show results section
     const resultsDiv = document.getElementById('results');
     resultsDiv.style.display = 'block';
     
-    // Smooth scroll to results (only when user clicks analyze)
     setTimeout(() => {
         resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
@@ -113,7 +324,6 @@ function displayResults(data) {
         case '💪 IMPENETRABLE': widthPercentage = 100; break;
     }
     strengthProgress.style.width = widthPercentage + '%';
-    strengthProgress.style.backgroundColor = data.strength_color;
     
     // Update metrics
     document.getElementById('entropyValue').textContent = data.entropy;
@@ -124,6 +334,19 @@ function displayResults(data) {
     updateDetailItem('variety', data.variety_message, data.variety_score);
     updateDetailItem('patterns', data.patterns_message, data.patterns_score);
     updateDetailItem('common', data.common_message, data.common_score);
+    
+    // Update breach check
+    const breachText = document.getElementById('breachText');
+    const breachStatus = document.getElementById('breachStatus');
+    if (data.breach_check.found) {
+        breachText.textContent = `Breach Database Check: ${data.breach_check.count} breach(es) found!`;
+        breachStatus.textContent = '[CRIT]';
+        breachStatus.className = 'detail-status critical';
+    } else {
+        breachText.textContent = 'Breach Database Check: No breaches found';
+        breachStatus.textContent = '[PASS]';
+        breachStatus.className = 'detail-status good';
+    }
     
     // Update suggestions
     const suggestionsList = document.getElementById('suggestionsList');
@@ -160,12 +383,10 @@ function getStatusClass(score) {
     return 'critical';
 }
 
-// Add cool typing sound effect (optional - requires audio)
-// This is just for aesthetics - remove if not needed
+// Console welcome message
 console.log(`
-╔═══════════════════════════════════════╗
-║  PASSWORD SECURITY ANALYZER v2.0      ║
-║  [SYSTEM: ONLINE]                     ║
-║  [ENCRYPTION: ACTIVE]                 ║
-╚═══════════════════════════════════════╝
+╔═══════════════════════════════════════════════════════════════╗
+║     PASSWORD SECURITY ANALYZER v3.0 - DARK WEB EDITION       ║
+║  [SYSTEM: ONLINE] | [DARK WEB: CONNECTED] | [READY]          ║
+╚═══════════════════════════════════════════════════════════════╝
 `);
